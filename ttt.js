@@ -25,7 +25,7 @@ let currentPlayer = playerPunchClass
 // Functions
 /////////////////
 
-// how to swtich turns between X and O
+// Switching Turns
 
 let isPlayerKickTurn = false
 let gameOver = false
@@ -57,12 +57,14 @@ const switchTurns = (event) => {
 //Event Listener 'click' for cellBlocks
 const cellClick = () => {
     for (let index = 0; index < cellBlocks.length; index++) {
-        cellBlocks[index].addEventListener('click', switchTurns
-        )
+        cellBlocks[index].addEventListener('click', switchTurns,
+        {once : true})
     }
 }
 
 cellClick()
+
+//Checking winner and showing message
 
 const checkWinner = () => {
     for (let combination of winningCombinations){
@@ -73,15 +75,13 @@ const checkWinner = () => {
        const block1 = cellBlocks[index1]
        const block2 = cellBlocks[index2]
        if (block0.classList.contains('PlayerX') && block1.classList.contains('PlayerX') && block2.classList.contains('PlayerX')) {
-            console.log('player x wins')
-            showMessage('Punch Wins')
+            showMessage('Puncher Wins')
             return true
        } else if (block0.classList.contains('PlayerO') && block1.classList.contains('PlayerO') && block2.classList.contains('PlayerO')) {
-            console.log("player O")
-            showMessage('Kick Wins')
+            showMessage('Kicker Wins')
             return true
-       }
-    } 
+        } 
+    }
     return false
 }
 
@@ -91,6 +91,8 @@ const showMessage = (winner) => {
     winningMessage.style.display = 'block'
     youWin.textContent = winner
 }
+
+//Board reset for new round
 
 const resetBoard = () => {
     for (let block of cellBlocks) {
@@ -102,6 +104,9 @@ const resetBoard = () => {
 
 }
 fightAgainButton.addEventListener('click', resetBoard)
+
+// Draw 
+
 
 
 
