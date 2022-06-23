@@ -1,17 +1,12 @@
+/////////////////////
+//Elements
+///////////////////
+
 const cellBlocks = document.querySelectorAll('.cell')
-
-const cellClick = () => {
-    for (let index = 0; index < cellBlocks.length; index++) {
-        cellBlocks[index].addEventListener('click', () => {
-            console.log('clicked')
-        })
-    }
-}
-
-cellClick()
-
 const playerPunchClass = 'x'
 const playerKickClass = 'cirlce'
+const winningMessage = document.querySelector('.winningMessage')
+const fightAgainButton = document.querySelector('.playAgain')
 const winningCombinations = [
     [0,1,2],
     [3,4,5],
@@ -22,21 +17,91 @@ const winningCombinations = [
     [0,4,8],
     [2,4,6]
 ]
-const winningMessage = document.querySelector('.winningMessage')
-const playAgainButton = document.querySelector('.playAgain')
+let currentPlayer = playerPunchClass
 
 
-// how to swtich turns between X and circle 
+
+/////////////////
+// Functions
+/////////////////
+
+// how to swtich turns between X and O
+
 let isPlayerKickTurn = false
+let gameOver = false
 
-const startFight = () => {
-    isPlayerKickTurn = false
-    cellBlocks.classList
+const switchTurns = (event) => {
+    console.log(event.target)
+    const currentDiv = event.target
+    if (gameOver) {
+        return 
+    }
+    if(isPlayerKickTurn === false) {
+        console.log(`now is ${isPlayerKickTurn}`)
+        currentDiv.classList.add('PlayerX') 
+        isPlayerKickTurn = true
+        console.log(`is ${isPlayerKickTurn}`)
+
+    } else if (isPlayerKickTurn === true){
+        console.log(`now is ${isPlayerKickTurn}`)
+        currentDiv.classList.add('PlayerO')
+        isPlayerKickTurn = false
+        console.log(`now is ${isPlayerKickTurn}`)
+    }
+    const winnerHasBeenSelected = checkWinner()
+    if (winnerHasBeenSelected) {
+        gameOver = true
+    }
 }
 
+//Event Listener 'click' for cellBlocks
+const cellClick = () => {
+    for (let index = 0; index < cellBlocks.length; index++) {
+        cellBlocks[index].addEventListener('click', switchTurns
+        )
+    }
+}
 
-//how to put token inside of the div 
+cellClick()
 
-//try to figure out how to check winning combination and find winner
+const checkWinner = () => {
+    for (let combination of winningCombinations){
+       const index0 = combination[0]
+       const index1 = combination[1]
+       const index2 = combination[2]
+       const block0 = cellBlocks[index0]
+       const block1 = cellBlocks[index1]
+       const block2 = cellBlocks[index2]
+       if (block0.classList.contains('PlayerX') && block1.classList.contains('PlayerX') && block2.classList.contains('PlayerX')) {
+            console.log('player x wins')
+            showMessage('Punch Wins')
+            return true
+       } else if (block0.classList.contains('PlayerO') && block1.classList.contains('PlayerO') && block2.classList.contains('PlayerO')) {
+            console.log("player O")
+            showMessage('Kick Wins')
+            return true
+       }
+    } 
+    return false
+}
 
-// showing winning message 
+const youWin = winningMessage.querySelector('p')
+
+const showMessage = (winner) => {
+    winningMessage.style.display = 'block'
+    youWin.textContent = winner
+}
+
+const resetBoard = () => {
+    for (let block of cellBlocks) {
+       block.classList.remove('PlayerX', 'PlayerO') 
+    }
+    winningMessage.style.display = 'none'
+    gameOver = false
+    isPlayerKickTurn = false
+
+}
+fightAgainButton.addEventListener('click', resetBoard)
+
+
+
