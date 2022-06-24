@@ -37,28 +37,40 @@ const switchTurns = (event) => {
         return 
     }
     if(isPlayerKickTurn === false) {
-        console.log(`now is ${isPlayerKickTurn}`)
         currentDiv.classList.add('PlayerX') 
         isPlayerKickTurn = true
-        console.log(`is ${isPlayerKickTurn}`)
 
     } else if (isPlayerKickTurn === true){
-        console.log(`now is ${isPlayerKickTurn}`)
         currentDiv.classList.add('PlayerO')
         isPlayerKickTurn = false
-        console.log(`now is ${isPlayerKickTurn}`)
     }
     const winnerHasBeenSelected = checkWinner()
     if (winnerHasBeenSelected) {
         gameOver = true
+    } else {
+        if (checkDraw()) {
+            gameOver = true
+        }
     }
+}
+
+// Check draw function
+const checkDraw = () => {
+    for (let block of cellBlocks) {
+        if  (!block.classList.contains('PlayerX') && !block.classList.contains('PlayerO')) {
+            return
+        }
+    }
+    showMessage('It is a draw! Fight again!')
+    return true
 }
 
 //Event Listener 'click' for cellBlocks
 const cellClick = () => {
     for (let index = 0; index < cellBlocks.length; index++) {
-        cellBlocks[index].addEventListener('click', switchTurns,
-        {once : true})
+        cellBlocks[index].addEventListener('click', switchTurns, 
+        // {once : true},
+        )
     }
 }
 
@@ -74,17 +86,17 @@ const checkWinner = () => {
        const block0 = cellBlocks[index0]
        const block1 = cellBlocks[index1]
        const block2 = cellBlocks[index2]
+       console.log(block0, block1, block2)
        if (block0.classList.contains('PlayerX') && block1.classList.contains('PlayerX') && block2.classList.contains('PlayerX')) {
             showMessage('Puncher Wins')
             return true
        } else if (block0.classList.contains('PlayerO') && block1.classList.contains('PlayerO') && block2.classList.contains('PlayerO')) {
             showMessage('Kicker Wins')
             return true
-        } 
+        }
     }
     return false
 }
-
 const youWin = winningMessage.querySelector('p')
 
 const showMessage = (winner) => {
@@ -104,8 +116,6 @@ const resetBoard = () => {
 
 }
 fightAgainButton.addEventListener('click', resetBoard)
-
-// Draw 
 
 
 
