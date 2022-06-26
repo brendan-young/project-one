@@ -18,6 +18,11 @@ const winningCombinations = [
     [2,4,6]
 ]
 let currentPlayer = playerPunchClass
+const punchAudio = new Audio('./snd/punch.wav')
+const kickAudio = new Audio('./snd/kick.wav')
+const playerXWinsAudio = new Audio ('./snd/haha1.wav')
+const playerOWinsAudio = new Audio ('./snd/haha2.wav')
+const drawAudio = new Audio ('./snd/draw.wav')
 
 
 
@@ -39,10 +44,12 @@ const switchTurns = (event) => {
     if(isPlayerKickTurn === false) {
         currentDiv.classList.add('PlayerX') 
         isPlayerKickTurn = true
+        punchAudio.play()
 
     } else if (isPlayerKickTurn === true){
         currentDiv.classList.add('PlayerO')
         isPlayerKickTurn = false
+        kickAudio.play()
     }
     const winnerHasBeenSelected = checkWinner()
     if (winnerHasBeenSelected) {
@@ -50,6 +57,7 @@ const switchTurns = (event) => {
     } else {
         if (checkDraw()) {
             gameOver = true
+            drawAudio.play()
         }
     }
 }
@@ -76,7 +84,7 @@ const cellClick = () => {
 
 cellClick()
 
-//Checking winner and showing message
+//Checking winner
 
 const checkWinner = () => {
     for (let combination of winningCombinations){
@@ -89,15 +97,20 @@ const checkWinner = () => {
        console.log(block0, block1, block2)
        if (block0.classList.contains('PlayerX') && block1.classList.contains('PlayerX') && block2.classList.contains('PlayerX')) {
             showMessage('Puncher Wins')
+            playerXWinsAudio.play()
             return true
        } else if (block0.classList.contains('PlayerO') && block1.classList.contains('PlayerO') && block2.classList.contains('PlayerO')) {
             showMessage('Kicker Wins')
+            playerOWinsAudio.play()
             return true
         }
     }
     return false
 }
 const youWin = winningMessage.querySelector('p')
+
+
+// Show Message
 
 const showMessage = (winner) => {
     winningMessage.style.display = 'block'
